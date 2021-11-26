@@ -45,7 +45,7 @@ def initBoardO ():
 
 #Display a 3x3 board using a 3x3 list as input
 def displayBoard(board):
-    boardSep = ('-'*5 + 'I')*2 + ('-'*5)
+    boardSep = ('-'*5 + '|')*2 + ('-'*5)
 
     for i in range(3): #Print row
         print(boardSep)
@@ -53,9 +53,81 @@ def displayBoard(board):
             if j == 2: #if the last column of the row is printed, ommit the column separator 'I'
                 print('  ' + boardValues[board[i][j]], end = "")
             else:
-                print('  ' + boardValues[board[i][j]] + '  I', end = "")
+                print('  ' + boardValues[board[i][j]] + '  |', end = "")
 
         print() #Prints newline
 
-board = initBoardO()
-displayBoard(board)
+
+#Get input from player
+def playerInput():
+
+    validInput = False #Flag used to control the validatio of user input
+
+    while(validInput == False):
+
+        row, column = [int(x) for x in input("Enter the row and column values you want to play (separated by a comma): ").split(',')]
+
+        if(row > 2 or row < 0 or column > 2 or column < 0):
+            print("Error: You can only enter values from 0 - 2 \n")
+
+        else:
+            print(f"You entered the values: {row}, {column}")
+            validInput = True
+
+    return row, column
+
+#Flag for controlling the end of the game
+gameOver = False
+#Total number of turns played
+turnNum= 0
+#Current player turn. X player (1) goes first.
+currentPlayer = 1
+#Current row being played
+cRow = 0
+#Current column being played
+cCol = 0
+
+
+board = initBoard()
+print("Game Start!")
+#Game loop
+while (gameOver == False):
+
+    print(f"It's {boardValues[currentPlayer]}'s turn!")
+    
+    #Player enters the slot he/she wants to play
+    cRow, cCol = playerInput()
+
+    #Slot is updated with the corresponding symbol
+    if (currentPlayer == 1): #If it's X's turn 
+        board[cRow][cCol] = 1
+    elif (currentPlayer == 2): #If it's O's turn
+        board[cRow][cCol] = 2
+    else:
+        board[cRow][cCol] = 0
+
+    #Display the board with the updated values
+    displayBoard(board)
+
+    #Change the turn to the other player
+    if (currentPlayer == 1):
+        currentPlayer = 2
+    else:
+        currentPlayer = 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
