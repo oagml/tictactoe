@@ -96,19 +96,43 @@ def playerInput(board):
 
 def findWinner (board):
     
-    winningRows = [[(0,0),(0,1),(0,2)],[(1,0),(1,1),(1,2)],[(2,0),(2,1),(2,2)]]
-    winningCols = [[(0,0),(1,0),(2,0)],[(0,1),(1,1),(2,1)],[(0,2),(1,2),(2,2)]]
-    winningDiags = [[(0,0),(1,1),(2,2)],[(2,0),(1,1),(0,2)]]
+    winner = 0
 
-    for i in winningRows:
-        for j in winningRows[i]:
-            
+    for i in range(3):
+        #Check if there is a winning row
+        if(board[i][0] == board[i][1] and board[i][1] == board[i][2]):
+            if board[i][0] == 1:
+                winner = 1
+            elif board[i][0] == 2:
+                winner = 2
+            else:
+                winner = 0
+        #Check if there is a winning column
+        if(board[0][i] ==  board[1][i] and board[1][i] == board[2][i]):
+            if board[0][i] == 1:
+                winner = 1
+            elif board[0][i] == 2:
+                winner = 2
+            else:
+                winner = 0
 
+        #Check if there is a winning column
+        if(board[0][0] == board[1][1] and board[1][1] == board[2][2]):
+            if board[0][0] == 1:
+                winner = 1
+            elif board[0][0] == 2:
+                winner = 2
+            else:
+                winner = 0
+        if(board[2][0] == board[1][1] and board[1][1] == board[0][2]):
+            if board[2][0] == 1:
+                winner = 1
+            elif board[2][0] == 2:
+                winner = 2
+            else:
+                winner = 0
 
-
-
-
-
+    return winner
 
 
 
@@ -144,6 +168,14 @@ while (gameOver == False):
 
     #Display the board with the updated values
     displayBoard(board)
+
+    if(findWinner(board) == 1):
+        print("X won the game!")
+        gameOver = True
+
+    elif(findWinner(board) == 2):
+        print("O won the game!")
+        gameOver = True
 
     #Change the turn to the other player
     if (currentPlayer == 1):
