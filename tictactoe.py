@@ -23,6 +23,9 @@
 #Initialize Board: Function that initializes the board with empy or blank values
 #Update Board: Function that updates the values of the board
 
+#Import modules
+import random
+
 #How the program works:
 #In the program, each symbol will be equivalent to the following values:
 '''
@@ -37,11 +40,6 @@ boardValues = {0:' ', 1:'X', 2:'O'}
 def initBoard ():
     return [[0,0,0],[0,0,0],[0,0,0]]
 
-def initBoardX ():
-    return [[1,1,1],[1,1,1],[1,1,1]]
-
-def initBoardO ():
-    return [[2,2,2],[2,2,2],[2,2,2]]
 
 #Display a 3x3 board using a 3x3 list as input
 def displayBoard(board):
@@ -57,6 +55,25 @@ def displayBoard(board):
 
         print() #Prints newline
 
+#Create a function that plays random positions
+def randInput(board):
+
+    validInput = False #Flag used to control the validatio of user input
+
+    while(validInput == False):
+
+        row = random.randrange(3)
+        column = random.randrange(3)
+
+        #Verify the space randomly chosen is empty
+        if (board[row][column] == 0):
+            validInput = True
+        else: #if the slot already contains an X or O, the input is Invalid
+            #print(f"This space ({row},{column}) has already been played, choose another one")
+            validInput = False
+
+    return row, column
+    
 
 #Get input from player
 def playerInput(board):
@@ -155,10 +172,13 @@ while (gameOver == False):
 
     print(f"It's {boardValues[currentPlayer]}'s turn!")
     
-    #Player enters the slot he/she wants to play
-    cRow, cCol = playerInput(board)
+    #If it's X's turn, player enters the input
+    if (currentPlayer == 1):
+        cRow, cCol = playerInput(board)
+    else: #If it's O's turn, computer randomly enters the input
+        cRow, cCol = randInput(board)
 
-    #Slot is updated with the corresponding symbol
+    #Space is updated with the corresponding symbol
     if (currentPlayer == 1): #If it's X's turn 
         board[cRow][cCol] = 1
     elif (currentPlayer == 2): #If it's O's turn
@@ -169,10 +189,12 @@ while (gameOver == False):
     #Display the board with the updated values
     displayBoard(board)
 
+    #Check if X already won the game
     if(findWinner(board) == 1):
         print("X won the game!")
         gameOver = True
 
+    #Check if Y already won the game
     elif(findWinner(board) == 2):
         print("O won the game!")
         gameOver = True
