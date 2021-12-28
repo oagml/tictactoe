@@ -33,86 +33,99 @@ import random
 1 = 'X'
 2 = 'O'
 '''
-boardValues = {0:' ', 1:'X', 2:'O'}
+board_values = {0:' ', 1:'X', 2:'O'}
 
-#First, the board is initialized with the empty values
-#The board will be stored in a two dimmensional list
-def initBoard ():
+def init_board () -> list:
+    """Initializes a board filled with zeroes and returns it"""
     return [[0,0,0],[0,0,0],[0,0,0]]
 
 
-#Display a 3x3 board using a 3x3 list as input
-def displayBoard(board):
-    boardSep = ('-'*5 + '|')*2 + ('-'*5)
+def display_board(board: list) -> None:
+    """Print the board in the terminal."""
+    board_sep = ('-'*5 + '|')*2 + ('-'*5)
 
     for i in range(3): #Print row
-        print(boardSep)
+        print(board_sep)
         for j in range(3): #Print column
             if j == 2: #if the last column of the row is printed, ommit the column separator 'I'
-                print('  ' + boardValues[board[i][j]], end = "")
+                print('  ' + board_values[board[i][j]], end = "")
             else:
-                print('  ' + boardValues[board[i][j]] + '  |', end = "")
+                print('  ' + board_values[board[i][j]] + '  |', end = "")
 
         print() #Prints newline
 
-#Create a function that plays random positions
-def randInput(board):
 
-    validInput = False #Flag used to control the validatio of user input
+def rand_input(board: list) -> int:
+    """ Pick a random space in the board to play."""
 
-    while(validInput == False):
+    valid_input = False #Flag used to control the validatio of user input
+
+    while(valid_input == False):
 
         row = random.randrange(3)
         column = random.randrange(3)
 
         #Verify the space randomly chosen is empty
         if (board[row][column] == 0):
-            validInput = True
+            valid_input = True
         else: #if the slot already contains an X or O, the input is Invalid
             #print(f"This space ({row},{column}) has already been played, choose another one")
-            validInput = False
+            valid_input = False
 
     return row, column
     
 
 #Get input from player
-def playerInput(board):
+def player_input(board: list) -> int:
+    """
+    Request the current player to enter the slot they want to play and verify if 
+    it is a playable space.
 
-    validInput = False #Flag used to control the validatio of user input
+    Args:
+        board -- 2 dimmensional list that represents the board
+    Return:
+        row, column -- these values represent the space in the board chosen by the player
+    """
 
-    while(validInput == False):
+    valid_input = False #Flag used to control the validatio of user input
+
+    while(valid_input == False):
 
         row, column = [int(x) for x in input("Enter the row and column values you want to play (separated by a comma): ").split(',')]
 
         #Verify the user entered valid row and column positions
         if(row > 2 or row < 0 or column > 2 or column < 0):
             print("Error: You can only enter values from 0 - 2 \n")
-            validInput = False
+            valid_input = False
         else:
             print(f"You entered the values: {row}, {column}")
-            validInput = True
+            valid_input = True
 
         #Verify the slot chosen by the player is actually empty
         if (board[row][column] == 0):
-            validInput = True
+            valid_input = True
         else: #if the slot already contains an X or O, the input is Invalid
             print("This space has already been played, choose another one")
-            validInput = False
+            valid_input = False
 
     return row, column
 
 
-#Create a function that determines the winner of the game
-#How does it work?
 #Define all the possible winning positions and scan the board to find if Xs or Os are filling
 #the winning positions
-#This is not an elegant solution in any way
 #Winning  row positions: [[(0,0),(0,1),(0,2)],[(1,0),(1,1),(1,2)],[(2,0),(2,1),(2,2)]]
 #Winning  column  positions: [[(0,0),(1,0),(2,0)],[(0,1),(1,1),(2,1)],[(0,2),(1,2),(2,2)]]
 #Winning  diagonal positions: [[(0,0),(1,1),(2,2)],[(2,0),(1,1),(0,2)]]
 
-def findWinner (board):
-    
+def find_winner (board: list) -> int:
+    """ Determine if the board contains a winner position
+
+    Args:
+        board -- a two dimmensional list that represents the board
+    Returns:
+        int: 0 = No winner, 1 = X won, 2 = O won
+
+    """
     winner = 0
 
     for i in range(3):
@@ -154,67 +167,56 @@ def findWinner (board):
 
 
 #Flag for controlling the end of the game
-gameOver = False
+game_over = False
 #Total number of turns played
-turnNum= 0
+turn_num= 0
 #Current player turn. X player (1) goes first.
-currentPlayer = 1
+current_player = 1
 #Current row being played
-cRow = 0
+row = 0
 #Current column being played
-cCol = 0
+col = 0
 
 
-board = initBoard()
+board = init_board()
 print("Game Start!")
-#Game loop
-while (gameOver == False):
 
-    print(f"It's {boardValues[currentPlayer]}'s turn!")
+#Game loop
+while (game_over == False):
+
+    print(f"It's {board_values[current_player]}'s turn!")
     
     #If it's X's turn, player enters the input
-    if (currentPlayer == 1):
-        cRow, cCol = playerInput(board)
+    if (current_player == 1):
+        row, col = player_input(board)
     else: #If it's O's turn, computer randomly enters the input
-        cRow, cCol = randInput(board)
+        row, col = rand_input(board)
 
     #Space is updated with the corresponding symbol
-    if (currentPlayer == 1): #If it's X's turn 
-        board[cRow][cCol] = 1
-    elif (currentPlayer == 2): #If it's O's turn
-        board[cRow][cCol] = 2
+    if (current_player == 1): #If it's X's turn 
+        board[row][col] = 1
+    elif (current_player == 2): #If it's O's turn
+        board[row][col] = 2
     else:
-        board[cRow][cCol] = 0
+        board[row][col] = 0
 
     #Display the board with the updated values
-    displayBoard(board)
+    display_board(board)
 
     #Check if X already won the game
-    if(findWinner(board) == 1):
+    if(find_winner(board) == 1):
         print("X won the game!")
-        gameOver = True
+        game_over = True
 
     #Check if Y already won the game
-    elif(findWinner(board) == 2):
+    elif(find_winner(board) == 2):
         print("O won the game!")
-        gameOver = True
+        game_over = True
 
     #Change the turn to the other player
-    if (currentPlayer == 1):
-        currentPlayer = 2
+    if (current_player == 1):
+        current_player = 2
     else:
-        currentPlayer = 1
-
-
-
-
-
-
-
-
-
-
-
-
+        current_player = 1
 
 
