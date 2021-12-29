@@ -24,7 +24,11 @@
 #Update Board: Function that updates the values of the board
 
 #Import modules
+import tkinter as tk
 import random
+
+root = tk.Tk()
+root.title("Tic Tac Toe")
 
 #How the program works:
 #In the program, each symbol will be equivalent to the following values:
@@ -35,10 +39,57 @@ import random
 '''
 board_values = {0:' ', 1:'X', 2:'O'}
 
+class gameButton:
+    def __init__(self, row, column):
+        self.row = row
+        self.column = column
+
+gButton1 = gameButton(row=0, column=0)
+gButton2 = gameButton(row=0, column=1)
+gButton3 = gameButton(row=0, column=2)
+gButton4 = gameButton(row=1, column=0)
+gButton5 = gameButton(row=1, column=1)
+gButton6 = gameButton(row=1, column=2)
+gButton7 = gameButton(row=2, column=0)
+gButton8 = gameButton(row=2, column=1)
+gButton9 = gameButton(row=2, column=2)
+
+
 def init_board () -> list:
     """Initializes a board filled with zeroes and returns it"""
     return [[0,0,0],[0,0,0],[0,0,0]]
 
+button_1 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_1, current_player[0], gButton1))
+button_2 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_2, current_player[0], gButton2))
+button_3 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_3, current_player[0], gButton3))
+button_4 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_4, current_player[0], gButton4))
+button_5 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_5, current_player[0], gButton5))
+button_6 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_6, current_player[0], gButton6))
+button_7 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_7, current_player[0], gButton7))
+button_8 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_8, current_player[0], gButton8))
+button_9 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
+        command=lambda: click_btn(button_9, current_player[0], gButton9))
+button_restart = tk.Button(root, text="Restart", font=("Helvetica", 10), height=3, width=45)
+
+#Put the buttons on the screen
+button_1.grid(row=0, column=0)
+button_2.grid(row=0, column=1)
+button_3.grid(row=0, column=2)
+button_4.grid(row=1, column=0)
+button_5.grid(row=1, column=1)
+button_6.grid(row=1, column=2)
+button_7.grid(row=2, column=0)
+button_8.grid(row=2, column=1)
+button_9.grid(row=2, column=2)
+button_restart.grid(row=4, columnspan = 3)
 
 def display_board(board: list) -> None:
     """Print the board in the terminal."""
@@ -95,6 +146,7 @@ def player_input(board: list) -> int:
 
         #Verify the user entered valid row and column positions
         if(row > 2 or row < 0 or column > 2 or column < 0):
+            #raise ValueError("You can only enter values from 0 - 2")
             print("Error: You can only enter values from 0 - 2 \n")
             valid_input = False
         else:
@@ -171,7 +223,7 @@ game_over = False
 #Total number of turns played
 turn_num= 0
 #Current player turn. X player (1) goes first.
-current_player = 1
+current_player = [1]
 #Current row being played
 row = 0
 #Current column being played
@@ -181,6 +233,35 @@ col = 0
 board = init_board()
 print("Game Start!")
 
+def click_btn(button: tk.Button, player: int, gButton: gameButton) ->None:
+    """ Update the button that has been selected in the grid."""
+    if player == 1:
+        button.configure(text = "X")
+        row = gButton.row
+        col = gButton.column
+        board[row][col] = 1
+    else:
+        button.configure(text = "O")
+        row = gButton.row
+        col = gButton.column
+        board[row][col] = 2
+
+    #Check if X already won the game
+    if(find_winner(board) == 1):
+        print("X won the game!")
+        game_over = True
+
+    #Check if Y already won the game
+    elif(find_winner(board) == 2):
+        print("O won the game!")
+        game_over = True
+
+    #Change the turn to the other player
+    if (player == 1):
+        current_player[0] = 2
+    else:
+        current_player[0] = 1
+"""
 #Game loop
 while (game_over == False):
 
@@ -218,5 +299,5 @@ while (game_over == False):
         current_player = 2
     else:
         current_player = 1
-
-
+"""
+root.mainloop()
