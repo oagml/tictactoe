@@ -25,6 +25,7 @@
 
 #Import modules
 import tkinter as tk
+import tkinter.messagebox
 import random
 
 root = tk.Tk()
@@ -104,7 +105,6 @@ def display_board(board: list) -> None:
                 print('  ' + board_values[board[i][j]] + '  |', end = "")
 
         print() #Prints newline
-
 
 def rand_input(board: list) -> int:
     """ Pick a random space in the board to play."""
@@ -220,8 +220,6 @@ def find_winner (board: list) -> int:
 
 #Flag for controlling the end of the game
 game_over = False
-#Total number of turns played
-turn_num= 0
 #Current player turn. X player (1) goes first.
 current_player = [1]
 #Current row being played
@@ -235,25 +233,34 @@ print("Game Start!")
 
 def click_btn(button: tk.Button, player: int, gButton: gameButton) ->None:
     """ Update the button that has been selected in the grid."""
-    if player == 1:
-        button.configure(text = "X")
-        row = gButton.row
-        col = gButton.column
-        board[row][col] = 1
+    row = gButton.row
+    col = gButton.column
+
+    if board[row][col] != 0: #If that space has already been played
+        tk.messagebox.showerror("Tic Tac Toe", "This space has been already been played")
+        return None
+
     else:
-        button.configure(text = "O")
-        row = gButton.row
-        col = gButton.column
-        board[row][col] = 2
+        print("Writing Value")
+
+        if player == 1:
+            button.configure(text = "X")
+            board[row][col] = 1
+
+        else:
+            button.configure(text = "O")
+            board[row][col] = 2
 
     #Check if X already won the game
     if(find_winner(board) == 1):
         print("X won the game!")
+        tk.messagebox.showinfo("Tic Tac Toe", "X won the game!")
         game_over = True
 
     #Check if Y already won the game
     elif(find_winner(board) == 2):
         print("O won the game!")
+        tk.messagebox.showinfo("Tic Tac Toe", "O won the game!")
         game_over = True
 
     #Change the turn to the other player
@@ -261,43 +268,7 @@ def click_btn(button: tk.Button, player: int, gButton: gameButton) ->None:
         current_player[0] = 2
     else:
         current_player[0] = 1
-"""
-#Game loop
-while (game_over == False):
 
-    print(f"It's {board_values[current_player]}'s turn!")
-    
-    #If it's X's turn, player enters the input
-    if (current_player == 1):
-        row, col = player_input(board)
-    else: #If it's O's turn, computer randomly enters the input
-        row, col = rand_input(board)
 
-    #Space is updated with the corresponding symbol
-    if (current_player == 1): #If it's X's turn 
-        board[row][col] = 1
-    elif (current_player == 2): #If it's O's turn
-        board[row][col] = 2
-    else:
-        board[row][col] = 0
 
-    #Display the board with the updated values
-    display_board(board)
-
-    #Check if X already won the game
-    if(find_winner(board) == 1):
-        print("X won the game!")
-        game_over = True
-
-    #Check if Y already won the game
-    elif(find_winner(board) == 2):
-        print("O won the game!")
-        game_over = True
-
-    #Change the turn to the other player
-    if (current_player == 1):
-        current_player = 2
-    else:
-        current_player = 1
-"""
 root.mainloop()
