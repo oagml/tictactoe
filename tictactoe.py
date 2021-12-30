@@ -78,7 +78,8 @@ button_8 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
         command=lambda: click_btn(button_8, current_player[0], gButton8))
 button_9 = tk.Button(root, text=" ", font=("Helvetica", 30), height=3, width=4,
         command=lambda: click_btn(button_9, current_player[0], gButton9))
-button_restart = tk.Button(root, text="Restart", font=("Helvetica", 10), height=3, width=45)
+button_restart = tk.Button(root, text="Restart", font=("Helvetica", 10), height=3, width=45,
+        command=lambda: restart_game(board))
 
 #Put the buttons on the screen
 button_1.grid(row=0, column=0)
@@ -178,43 +179,44 @@ def find_winner (board: list) -> int:
         int: 0 = No winner, 1 = X won, 2 = O won
 
     """
-    winner = 0
-
     for i in range(3):
         #Check if there is a winning row
         if(board[i][0] == board[i][1] and board[i][1] == board[i][2]):
             if board[i][0] == 1:
-                winner = 1
+                 return 1
             elif board[i][0] == 2:
-                winner = 2
+                 return 2
             else:
-                winner = 0
+                pass
+
         #Check if there is a winning column
         if(board[0][i] ==  board[1][i] and board[1][i] == board[2][i]):
             if board[0][i] == 1:
-                winner = 1
+                return 1
+                print("Hello!!!!!!!")
             elif board[0][i] == 2:
-                winner = 2
+                return 2
             else:
-                winner = 0
+                pass
 
-        #Check if there is a winning column
-        if(board[0][0] == board[1][1] and board[1][1] == board[2][2]):
-            if board[0][0] == 1:
-                winner = 1
-            elif board[0][0] == 2:
-                winner = 2
-            else:
-                winner = 0
-        if(board[2][0] == board[1][1] and board[1][1] == board[0][2]):
-            if board[2][0] == 1:
-                winner = 1
-            elif board[2][0] == 2:
-                winner = 2
-            else:
-                winner = 0
+    #Check if there is a winning diagonal
+    if(board[0][0] == board[1][1] and board[1][1] == board[2][2]):
+        if board[0][0] == 1:
+            return 1
+        elif board[0][0] == 2:
+            return 2
+        else:
+            pass
 
-    return winner
+    if(board[2][0] == board[1][1] and board[1][1] == board[0][2]):
+        if board[2][0] == 1:
+            return 1
+        elif board[2][0] == 2:
+            return 2
+        else:
+            pass
+
+    return 0
 
 
 
@@ -229,6 +231,7 @@ col = 0
 
 
 board = init_board()
+print(type(board))
 print("Game Start!")
 
 def click_btn(button: tk.Button, player: int, gButton: gameButton) ->None:
@@ -246,28 +249,48 @@ def click_btn(button: tk.Button, player: int, gButton: gameButton) ->None:
         if player == 1:
             button.configure(text = "X")
             board[row][col] = 1
+            print(f"Updating position {row},{col} with X.")
 
         else:
             button.configure(text = "O")
             board[row][col] = 2
+            print(f"Updating position {row},{col} with O.")
 
     #Check if X already won the game
     if(find_winner(board) == 1):
-        print("X won the game!")
         tk.messagebox.showinfo("Tic Tac Toe", "X won the game!")
+        restart_game(board)
         game_over = True
 
     #Check if Y already won the game
     elif(find_winner(board) == 2):
-        print("O won the game!")
         tk.messagebox.showinfo("Tic Tac Toe", "O won the game!")
+        restart_game(board)
         game_over = True
+
+    else:
+        print("No one has won the game yet.")
 
     #Change the turn to the other player
     if (player == 1):
         current_player[0] = 2
     else:
         current_player[0] = 1
+
+def restart_game(board: list):
+    for i in range(len(board)):
+        for j in range(len(board)):
+            board[i][j] = 0
+
+    button_1.configure(text = " ")
+    button_2.configure(text = " ")
+    button_3.configure(text = " ")
+    button_4.configure(text = " ")
+    button_5.configure(text = " ")
+    button_6.configure(text = " ")
+    button_7.configure(text = " ")
+    button_8.configure(text = " ")
+    button_9.configure(text = " ")
 
 
 
